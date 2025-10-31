@@ -1,0 +1,29 @@
+{
+  "name": "slotreader-v1",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root package.json for SlotReader-v1 project - proxies commands to frontend",
+  "scripts": {
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm start",
+    "lint": "cd frontend && npm run lint",
+    "format": "cd frontend && npm run format",
+    "format:check": "cd frontend && npm run format:check",
+    "type-check": "cd frontend && npm run type-check",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:clean": "cd frontend && rm -rf .next out node_modules",
+    "frontend:reset": "cd frontend && rm -rf node_modules package-lock.json && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "author": "",
+  "license": "MIT"
+}
+

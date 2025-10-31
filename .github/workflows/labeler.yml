@@ -17,7 +17,11 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/labeler@v4
+    - name: Checkout base branch
+      uses: actions/checkout@v4
+
+    - name: Labeler
+      uses: actions/labeler@v6
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        configuration-path: .github/labeler.yml

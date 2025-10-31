@@ -1,0 +1,32 @@
+# Labeler configuration for SlotReader-v1
+# Labels PRs based on which files are modified
+# See: https://github.com/actions/labeler
+
+backend:
+  - 'backend/**'
+  - 'venv/pyvenv.cfg'
+  - '.python-version'
+
+frontend:
+  - 'frontend/**'
+  - 'package.json'
+  - 'package-lock.json'
+
+docs:
+  - 'docs/**'
+  - '**/*.md'
+  - 'README.md'
+
+infra:
+  - 'infra/**'
+  - '.github/workflows/**'
+  - 'vercel.json'
+  - 'Makefile'
+
+dependencies:
+  - '**/requirements.txt'
+  - '**/package.json'
+  - '**/package-lock.json'
+  - '**/Pipfile'
+  - '**/poetry.lock'
+

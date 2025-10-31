@@ -216,3 +216,5 @@ frontend/tsconfig.tsbuildinfo
 
 # CI/CD
 .github/workflows/*.log
+
+.vscode/

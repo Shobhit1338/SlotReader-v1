@@ -8,31 +8,11 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: slotreader
-          POSTGRES_PASSWORD: slotreader
-          POSTGRES_DB: slotreader
-        options: >-
-          --health-cmd "pg_isready -U slotreader"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     env:
       DJANGO_SECRET_KEY: testing-secret-key
       DJANGO_DEBUG: "False"
       DJANGO_ALLOWED_HOSTS: "*"
-      DB_ENGINE: django.db.backends.postgresql
-      DB_NAME: slotreader
-      DB_USER: slotreader
-      DB_PASSWORD: slotreader
-      DB_HOST: localhost
-      DB_PORT: "5432"
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
       CORS_ALLOW_ALL_ORIGINS: "False"
 
     steps:
@@ -54,25 +34,39 @@ jobs:
           python - <<'PYCODE'
           import os
           import time
+          from urllib.parse import urlparse
 
           import psycopg2
 
-          host = os.environ.get("DB_HOST", "localhost")
-          port = int(os.environ.get("DB_PORT", "5432"))
-          dbname = os.environ.get("DB_NAME", "slotreader")
-          user = os.environ.get("DB_USER", "slotreader")
-          password = os.environ.get("DB_PASSWORD", "slotreader")
+          database_url = os.environ.get("DATABASE_URL")
+          if not database_url:
+              raise SystemExit("DATABASE_URL environment variable is required")
+
+          parsed = urlparse(database_url)
+          host = parsed.hostname
+          port = parsed.port or 5432
+          dbname = parsed.path[1:] if parsed.path else 'postgres'
+          user = parsed.username
+          password = parsed.password
 
           for attempt in range(10):
               try:
-                  conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host, port=port)
-              except psycopg2.OperationalError:
-                  time.sleep(3)
+                  conn = psycopg2.connect(
+                      dbname=dbname,
+                      user=user,
+                      password=password,
+                      host=host,
+                      port=port,
+                      connect_timeout=10
+                  )
+              except psycopg2.OperationalError as e:
+                  if attempt < 9:
+                      time.sleep(3)
+                  else:
+                      raise SystemExit(f"Database connection failed after 10 attempts: {e}")
               else:
                   conn.close()
                   break
-          else:
-              raise SystemExit("Database connection failed")
           PYCODE
 
       - name: Django system checks

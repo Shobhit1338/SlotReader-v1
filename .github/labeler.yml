@@ -1,28 +1,38 @@
 backend:
-  - backend/**
-  - venv/pyvenv.cfg
-  - .python-version
+  - changed-files:
+      - any-glob-to:
+          - 'backend/**'
+          - 'venv/pyvenv.cfg'
+          - '.python-version'
 
 frontend:
-  - frontend/**
-  - package.json
-  - package-lock.json
+  - changed-files:
+      - any-glob-to:
+          - 'frontend/**'
+          - 'package.json'
+          - 'package-lock.json'
 
 docs:
-  - docs/**
-  - "**/*.md"
-  - README.md
+  - changed-files:
+      - any-glob-to:
+          - 'docs/**'
+          - '**/*.md'
+          - 'README.md'
 
 infra:
-  - infra/**
-  - .github/workflows/**
-  - vercel.json
-  - Makefile
+  - changed-files:
+      - any-glob-to:
+          - 'infra/**'
+          - '.github/workflows/**'
+          - 'vercel.json'
+          - 'Makefile'
 
 dependencies:
-  - "**/requirements.txt"
-  - "**/package.json"
-  - "**/package-lock.json"
-  - "**/Pipfile"
-  - "**/poetry.lock"
+  - changed-files:
+      - any-glob-to:
+          - '**/requirements.txt'
+          - '**/package.json'
+          - '**/package-lock.json'
+          - '**/Pipfile'
+          - '**/poetry.lock'
 

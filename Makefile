@@ -1,6 +1,13 @@
-.PHONY: help install-frontend install-backend install dev-frontend dev-backend dev build lint format format-check type-check clean-frontend clean-backend clean test-frontend venv activate
+.PHONY: all help install-frontend install-backend install dev-frontend dev-backend dev build lint format format-check type-check clean-frontend clean-backend clean test-frontend venv activate
 
-# Default target
+# Default target (required for Makefile Tools extension)
+all: help
+	@echo ""
+	@echo "Run 'make help' to see all available commands."
+	@echo "Run 'make install' to install dependencies."
+	@echo "Run 'make dev' to start development servers."
+
+# Help target
 help:
 	@echo "SlotReader-v1 Makefile Commands:"
 	@echo ""

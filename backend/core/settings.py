@@ -5,6 +5,7 @@ import os
 
 from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,15 +89,20 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+DATABASE_URL = get_env('DATABASE_URL', required=True)
+parsed = urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
-        'ENGINE': get_env('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': get_env('DB_NAME', required=True),
-        'USER': get_env('DB_USER', required=True),
-        'PASSWORD': get_env('DB_PASSWORD', required=True),
-        'HOST': get_env('DB_HOST', 'localhost'),
-        'PORT': get_env('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path[1:] if parsed.path else 'postgres',
+        'USER': parsed.username,
+        'PASSWORD': parsed.password,
+        'HOST': parsed.hostname,
+        'PORT': str(parsed.port) if parsed.port else '5432',
+        'OPTIONS': {
+            'connect_timeout': 10,
+        },
     }
 }
 

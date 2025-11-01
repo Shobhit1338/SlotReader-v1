@@ -8,18 +8,19 @@ Built with Next.js and Django for a fast, minimal reading workflow.
 ## setup
 
 ```bash
-make install     # install all dependencies
-make dev         # run frontend and backend together
+# 1. Install dependencies
+make install
+
+# 2. Configure .env file
+# Copy backend/.env.example to backend/.env
+# Update DATABASE_URL with your Supabase password
+
+# 3. Run migrations
+make migrate-db
+
+# 4. Start development servers
+make dev
 ```
-
-or run separately:
-
-```bash
-make dev-frontend
-make dev-backend
-```
-
-Environment templates are available in `.env.example` under each service.
 
 ---
 
@@ -39,17 +40,17 @@ SlotReader-v1/
 ## stack
 
 Next.js · Tailwind · TypeScript
-Django · DRF · PostgreSQL · PgVector
+Django · DRF · Supabase (PostgreSQL + PgVector)
 Celery · Redis · GitHub Actions
 
 ---
 
 ## notes
 
-* `make help` shows available commands
-* detailed roadmap in `mvp_v_1_roadmap.md`
-* CI/CD runs on push: lint, test, build
-* deploys via Vercel (frontend) and Render (backend)
+* `make help` shows all available commands
+* Run migrations: `make migrate-db`
+* Configure `DATABASE_URL` in `backend/.env`
+* Detailed roadmap in `SlotReader-MVP.md`
 
 ---
 

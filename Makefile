@@ -1,4 +1,4 @@
-.PHONY: all help install-frontend install-backend install dev-frontend dev-backend dev build lint format format-check type-check clean-frontend clean-backend clean test-frontend venv activate
+.PHONY: all help install-frontend install-backend install dev-frontend dev-backend dev build lint format format-check type-check clean-frontend clean-backend clean test-frontend venv activate migrate-db
 
 # Default target (required for Makefile Tools extension)
 all: help
@@ -16,6 +16,7 @@ help:
 	@echo "  make install-frontend  - Install frontend dependencies"
 	@echo "  make install-backend   - Install backend dependencies"
 	@echo "  make install           - Install all dependencies"
+	@echo "  make migrate-db        - Run Django database migrations"
 	@echo ""
 	@echo "Development:"
 	@echo "  make dev-frontend      - Run frontend dev server"
@@ -59,6 +60,11 @@ install-backend: venv
 
 install: install-frontend install-backend
 	@echo "All dependencies installed!"
+
+# Database
+migrate-db: venv
+	@echo "Running database migrations..."
+	@. venv/bin/activate && cd backend && python manage.py migrate
 
 # Development servers
 dev-frontend:

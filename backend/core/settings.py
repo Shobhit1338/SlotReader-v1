@@ -88,15 +88,22 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+from urllib.parse import urlparse
+
+DATABASE_URL = get_env('DATABASE_URL', required=True)
+parsed = urlparse(DATABASE_URL)
 
 DATABASES = {
     'default': {
-        'ENGINE': get_env('DB_ENGINE', 'django.db.backends.postgresql'),
-        'NAME': get_env('DB_NAME', required=True),
-        'USER': get_env('DB_USER', required=True),
-        'PASSWORD': get_env('DB_PASSWORD', required=True),
-        'HOST': get_env('DB_HOST', 'localhost'),
-        'PORT': get_env('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': parsed.path[1:] if parsed.path else 'postgres',
+        'USER': parsed.username,
+        'PASSWORD': parsed.password,
+        'HOST': parsed.hostname,
+        'PORT': str(parsed.port) if parsed.port else '5432',
+        'OPTIONS': {
+            'connect_timeout': 10,
+        },
     }
 }
 
@@ -173,3 +180,16 @@ if not CORS_ALLOWED_ORIGINS and not CORS_ALLOW_ALL_ORIGINS:
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Custom User Model
+AUTH_USER_MODEL = 'api.User'
+
+# Celery Configuration
+CELERY_BROKER_URL = get_env('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = get_env('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_ALWAYS_EAGER = get_env('CELERY_TASK_ALWAYS_EAGER', 'False').lower() in {"1", "true", "yes"}

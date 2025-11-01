@@ -217,3 +217,4 @@ frontend/tsconfig.tsbuildinfo
 .github/workflows/*.log
 
 .vscode/
+SlotReader-MVP.md
